@@ -369,7 +369,7 @@ logger.error = (msg, options) => {
 }
 
 export default defineConfig({
-	base: './',
+	base: '/',
 	optimizeDeps: {
 		include: allDeps,
 	},

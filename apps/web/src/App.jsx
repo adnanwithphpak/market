@@ -12,6 +12,9 @@ import AboutUsPage from './pages/AboutUsPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import BlogPage from './pages/BlogPage.jsx';
 import BlogPostPage from './pages/BlogPostPage.jsx';
+import SeoLandingPage from './pages/SeoLandingPage.jsx';
+import PolicyPage from './pages/PolicyPage.jsx';
+import CaseStudyPage from './pages/CaseStudyPage.jsx';
 import WhatsAppButton from './components/WhatsAppButton.jsx';
 
 function App() {
@@ -34,6 +37,10 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
+        <Route path="/privacy-policy" element={<PolicyPage policy="privacy-policy" />} />
+        <Route path="/terms-of-services" element={<PolicyPage policy="terms-of-services" />} />
+        <Route path="/case-study" element={<CaseStudyPage />} />
+        <Route path="/:slug" element={<SeoLandingPage />} />
       </Routes>
       <WhatsAppButton />
       <Toaster />

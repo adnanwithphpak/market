@@ -56,8 +56,8 @@ const Footer = () => {
             © {currentYear} HighDaGuestPosts. All rights reserved.
           </p>
           <div className="flex space-x-4 text-sm text-slate-500">
-            <Link to="#" className="hover:text-blue-600 transition-colors">Privacy Policy</Link>
-            <Link to="#" className="hover:text-blue-600 transition-colors">Terms of Service</Link>
+            <Link to="/privacy-policy" className="hover:text-blue-600 transition-colors">Privacy Policy</Link>
+            <Link to="/terms-of-services" className="hover:text-blue-600 transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>
