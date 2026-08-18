@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop.jsx';
+import SiteSchema from './components/SiteSchema.jsx';
 import { Toaster } from './components/ui/toaster.jsx';
 import HomePage from './pages/HomePage.jsx';
 import BuyGuestPostsPage from './pages/BuyGuestPostsPage.jsx';
@@ -25,6 +26,7 @@ function App() {
 
   return (
     <Router basename={basename}>
+      <SiteSchema />
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />

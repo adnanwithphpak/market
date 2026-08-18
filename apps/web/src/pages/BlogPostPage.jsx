@@ -35,6 +35,21 @@ const BlogPostPage = () => {
     }
   }, [post]);
 
+  const SITE_URL = 'https://www.highdaguestposts.com';
+  const canonical = post ? `${SITE_URL}/blog/${post.slug}/` : null;
+  const schema = post ? {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.metaDescription || post.description,
+    datePublished: post.date,
+    dateModified: post.updatedAt || post.date,
+    author: { '@type': 'Organization', name: 'HighDaGuestPosts', url: SITE_URL },
+    publisher: { '@type': 'Organization', name: 'HighDaGuestPosts', url: SITE_URL },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+    url: canonical,
+  } : null;
+
   if (!post) {
     return (
       <>
@@ -62,6 +77,12 @@ const BlogPostPage = () => {
       <Helmet>
         <title>{post.metaTitle} - HighDaGuestPosts</title>
         <meta name="description" content={post.metaDescription} />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:title" content={post.metaTitle} />
+        <meta property="og:description" content={post.metaDescription} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:type" content="article" />
+        <script type="application/ld+json">{JSON.stringify(schema)}</script>
       </Helmet>
 
       <Header />
