@@ -15,8 +15,13 @@ import BlogPostPage from './pages/BlogPostPage.jsx';
 import WhatsAppButton from './components/WhatsAppButton.jsx';
 
 function App() {
+  const basename = window.location.hostname === 'localhost' &&
+    window.location.pathname.startsWith('/market')
+    ? '/market'
+    : '/';
+
   return (
-    <Router>
+    <Router basename={basename}>
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />
