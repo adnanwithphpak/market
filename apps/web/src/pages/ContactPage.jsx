@@ -143,8 +143,8 @@ const ContactPage = () => {
                   </div>
                   <div className="ml-4">
                     <div className="font-semibold text-slate-900 mb-1">Email</div>
-                    <a href="mailto:contact@highdaguestposts.com" className="text-blue-600 hover:underline">
-                      contact@highdaguestposts.com
+                    <a href="mailto:info@highdaguestpost.com" className="text-blue-600 hover:underline">
+                      info@highdaguestpost.com
                     </a>
                   </div>
                 </div>
@@ -374,7 +374,7 @@ const ContactPage = () => {
                 Whether you have questions about our services or want to discuss a custom package, our team is here to help you achieve your link building goals.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="mailto:contact@highdaguestposts.com">
+                <a href="mailto:info@highdaguestpost.com">
                   <Button size="lg" className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white">
                     <Mail className="w-5 h-5 mr-2" />
                     Email Us
