@@ -13,6 +13,7 @@ import AboutUsPage from './pages/AboutUsPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import BlogPage from './pages/BlogPage.jsx';
 import BlogPostPage from './pages/BlogPostPage.jsx';
+import allPosts from './content/blog/index.js';
 import SeoLandingPage from './pages/SeoLandingPage.jsx';
 import PolicyPage from './pages/PolicyPage.jsx';
 import CaseStudyPage from './pages/CaseStudyPage.jsx';
@@ -39,6 +40,9 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
+        {allPosts.map((post) => (
+          <Route key={post.slug} path={`/${post.slug}`} element={<BlogPostPage />} />
+        ))}
         <Route path="/privacy-policy" element={<PolicyPage policy="privacy-policy" />} />
         <Route path="/terms-of-services" element={<PolicyPage policy="terms-of-services" />} />
         <Route path="/case-study" element={<CaseStudyPage />} />

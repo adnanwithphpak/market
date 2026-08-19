@@ -36,7 +36,7 @@ const BlogPostPage = () => {
   }, [post]);
 
   const SITE_URL = 'https://www.highdaguestposts.com';
-  const canonical = post ? `${SITE_URL}/blog/${post.slug}/` : null;
+  const canonical = post ? `${SITE_URL}/${post.slug}/` : null;
   const schema = post ? {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -199,7 +199,7 @@ const BlogPostPage = () => {
             <h2 className="text-3xl font-bold text-slate-900 mb-8">Related Articles</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedPosts.map((relatedPost) => (
-                <Link key={relatedPost.slug} to={`/blog/${relatedPost.slug}`} className="block group h-full">
+                <Link key={relatedPost.slug} to={`/${relatedPost.slug}`} className="block group h-full">
                   <div className="bg-white rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 border border-slate-100 overflow-hidden flex flex-col h-full">
                     <img 
                       src={relatedPost.image || 'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?w=800&q=80'} 

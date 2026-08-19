@@ -71,45 +71,27 @@ async function generateSitemap() {
   
   console.log(`Detected ${blogPosts.length} blog posts from src/content/blog/index.js`);
 
-  // 1. Generate page-sitemap.xml
-  let pageSitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-  pageSitemap += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+  // Generate one sitemap containing both regular pages and blog posts.
+  let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+  sitemap += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
   pageRoutes.forEach(route => {
-    pageSitemap += `  <url>\n`;
+    sitemap += `  <url>\n`;
     const pathname = route.path === '/' ? '/' : `${route.path}/`;
-    pageSitemap += `    <loc>${BASE_URL}${pathname}</loc>\n`;
-    pageSitemap += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
-    pageSitemap += `    <changefreq>${route.changefreq}</changefreq>\n`;
-    pageSitemap += `    <priority>${route.priority}</priority>\n`;
-    pageSitemap += `  </url>\n`;
+    sitemap += `    <loc>${BASE_URL}${pathname}</loc>\n`;
+    sitemap += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
+    sitemap += `    <changefreq>${route.changefreq}</changefreq>\n`;
+    sitemap += `    <priority>${route.priority}</priority>\n`;
+    sitemap += `  </url>\n`;
   });
-  pageSitemap += `</urlset>`;
-
-  // 2. Generate post-sitemap.xml
-  let postSitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-  postSitemap += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
   blogPosts.forEach(post => {
-    postSitemap += `  <url>\n`;
-    postSitemap += `    <loc>${BASE_URL}/blog/${post.slug}/</loc>\n`;
-    postSitemap += `    <lastmod>${post.updatedAt}</lastmod>\n`;
-    postSitemap += `    <changefreq>monthly</changefreq>\n`;
-    postSitemap += `    <priority>0.7</priority>\n`;
-    postSitemap += `  </url>\n`;
+    sitemap += `  <url>\n`;
+    sitemap += `    <loc>${BASE_URL}/${post.slug}/</loc>\n`;
+    sitemap += `    <lastmod>${post.updatedAt}</lastmod>\n`;
+    sitemap += `    <changefreq>monthly</changefreq>\n`;
+    sitemap += `    <priority>0.7</priority>\n`;
+    sitemap += `  </url>\n`;
   });
-  postSitemap += `</urlset>`;
-
-  // 3. Generate sitemap.xml (Sitemap Index)
-  let sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-  sitemapIndex += `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-  sitemapIndex += `  <sitemap>\n`;
-  sitemapIndex += `    <loc>${BASE_URL}/page-sitemap.xml</loc>\n`;
-  sitemapIndex += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
-  sitemapIndex += `  </sitemap>\n`;
-  sitemapIndex += `  <sitemap>\n`;
-  sitemapIndex += `    <loc>${BASE_URL}/post-sitemap.xml</loc>\n`;
-  sitemapIndex += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
-  sitemapIndex += `  </sitemap>\n`;
-  sitemapIndex += `</sitemapindex>`;
+  sitemap += `</urlset>`;
 
   // Write directly to the public folder
   const publicDir = path.join(__dirname, '../public');
@@ -118,19 +100,18 @@ async function generateSitemap() {
     fs.mkdirSync(publicDir, { recursive: true });
   }
 
-  const pageSitemapPath = path.join(publicDir, 'page-sitemap.xml');
-  const postSitemapPath = path.join(publicDir, 'post-sitemap.xml');
   const sitemapIndexPath = path.join(publicDir, 'sitemap.xml');
 
-  fs.writeFileSync(pageSitemapPath, pageSitemap);
-  fs.writeFileSync(postSitemapPath, postSitemap);
-  fs.writeFileSync(sitemapIndexPath, sitemapIndex);
+  fs.writeFileSync(sitemapIndexPath, sitemap);
+
+  for (const obsoleteFile of ['page-sitemap.xml', 'post-sitemap.xml']) {
+    const obsoletePath = path.join(publicDir, obsoleteFile);
+    if (fs.existsSync(obsoletePath)) fs.unlinkSync(obsoletePath);
+  }
 
   console.log(`Generated sitemap.xml at: apps/web/public/sitemap.xml`);
-  console.log(`Generated page-sitemap.xml at: apps/web/public/page-sitemap.xml`);
-  console.log(`Generated post-sitemap.xml at: apps/web/public/post-sitemap.xml`);
-  console.log(`Total pages in page-sitemap.xml: ${pageRoutes.length}`);
-  console.log(`Total blog posts in post-sitemap.xml: ${blogPosts.length}`);
+  console.log(`Total pages: ${pageRoutes.length}`);
+  console.log(`Total blog posts: ${blogPosts.length}`);
 
   // Verification Logging
   const printLines = (filePath, name) => {
@@ -142,17 +123,13 @@ async function generateSitemap() {
   };
 
   printLines(sitemapIndexPath, 'sitemap.xml');
-  printLines(pageSitemapPath, 'page-sitemap.xml');
-  printLines(postSitemapPath, 'post-sitemap.xml');
 
-  console.log(`Verification: sitemap.xml contains 2 URLs (sitemaps)`);
-  console.log(`Verification: page-sitemap.xml contains ${pageRoutes.length} pages`);
-  console.log(`Verification: post-sitemap.xml contains ${blogPosts.length} blog posts`);
+  console.log(`Verification: sitemap.xml contains ${pageRoutes.length + blogPosts.length} URLs`);
   
   if (blogPosts.length > 0) {
     console.log(`Sample blog URLs:`);
     blogPosts.slice(0, 3).forEach(post => {
-      console.log(`- ${BASE_URL}/blog/${post.slug}/`);
+      console.log(`- ${BASE_URL}/${post.slug}/`);
     });
   }
 }

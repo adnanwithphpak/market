@@ -91,7 +91,7 @@ const BlogPage = () => {
                   variants={itemVariants}
                   className="bg-white rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 border border-slate-100 overflow-hidden flex flex-col h-full group"
                 >
-                  <Link to={`/blog/${post.slug}`} className="block overflow-hidden">
+                  <Link to={`/${post.slug}`} className="block overflow-hidden">
                     <img 
                       src={post.image || 'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?w=800&q=80'} 
                       alt={post.title} 
@@ -108,13 +108,13 @@ const BlogPage = () => {
                       })}
                     </div>
                     <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">
-                      <Link to={`/blog/${post.slug}`}>{post.title}</Link>
+                      <Link to={`/${post.slug}`}>{post.title}</Link>
                     </h3>
                     <p className="text-sm text-slate-600 mb-6 line-clamp-2 flex-grow">
                       {post.description}
                     </p>
                     <Link
-                      to={`/blog/${post.slug}`}
+                      to={`/${post.slug}`}
                       className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 mt-auto group-hover:translate-x-2 transition-transform text-sm"
                     >
                       Read More

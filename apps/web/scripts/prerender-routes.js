@@ -107,7 +107,7 @@ function appendLlmsTxt(landingPages, blogPosts) {
 		if (blogPosts.length) {
 			content += '\n\n## Blog\n';
 			content += blogPosts
-				.map((post) => `- [${post.title}](${SITE_URL}/blog/${post.slug}/): ${post.description}`)
+				.map((post) => `- [${post.title}](${SITE_URL}/${post.slug}/): ${post.description}`)
 				.join('\n');
 		}
 
@@ -125,7 +125,7 @@ async function main() {
 	const routes = [
 		...STATIC_ROUTES,
 		...landingPages.map((page) => `/${page.slug}`),
-		...blogPosts.map((post) => `/blog/${post.slug}`),
+		...blogPosts.map((post) => `/${post.slug}`),
 	];
 
 	prerenderRoutes(routes);
