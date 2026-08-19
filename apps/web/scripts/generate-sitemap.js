@@ -1,11 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const BASE_URL = 'https://highdaguestposts.com'; 
+const BASE_URL = 'https://www.highdaguestposts.com';
 
 const staticRoutes = [
   { path: '/', priority: '1.0', changefreq: 'weekly' },
@@ -16,8 +16,23 @@ const staticRoutes = [
   { path: '/submit-guest-post', priority: '0.8', changefreq: 'monthly' },
   { path: '/about', priority: '0.7', changefreq: 'monthly' },
   { path: '/contact', priority: '0.7', changefreq: 'monthly' },
-  { path: '/blog', priority: '0.8', changefreq: 'weekly' }
+  { path: '/blog', priority: '0.8', changefreq: 'weekly' },
+  { path: '/privacy-policy', priority: '0.3', changefreq: 'yearly' },
+  { path: '/terms-of-services', priority: '0.3', changefreq: 'yearly' },
+  { path: '/case-study', priority: '0.7', changefreq: 'monthly' }
 ];
+
+async function getLandingPages() {
+  const filePath = path.join(__dirname, '../src/content/landingPages.js');
+  if (!fs.existsSync(filePath)) return [];
+
+  const mod = await import(pathToFileURL(filePath).href);
+  return mod.landingPages.map(({ slug }) => ({
+    path: `/${slug}`,
+    priority: '0.8',
+    changefreq: 'monthly'
+  }));
+}
 
 function getBlogPosts() {
   const blogDir = path.join(__dirname, '../src/content/blog');
@@ -51,15 +66,18 @@ function getBlogPosts() {
 
 async function generateSitemap() {
   const blogPosts = getBlogPosts();
+  const landingPages = await getLandingPages();
+  const pageRoutes = [...staticRoutes, ...landingPages];
   
   console.log(`Detected ${blogPosts.length} blog posts from src/content/blog/index.js`);
 
   // 1. Generate page-sitemap.xml
   let pageSitemap = `<?xml version="1.0" encoding="UTF-8"?>\n`;
   pageSitemap += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-  staticRoutes.forEach(route => {
+  pageRoutes.forEach(route => {
     pageSitemap += `  <url>\n`;
-    pageSitemap += `    <loc>${BASE_URL}${route.path}</loc>\n`;
+    const pathname = route.path === '/' ? '/' : `${route.path}/`;
+    pageSitemap += `    <loc>${BASE_URL}${pathname}</loc>\n`;
     pageSitemap += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
     pageSitemap += `    <changefreq>${route.changefreq}</changefreq>\n`;
     pageSitemap += `    <priority>${route.priority}</priority>\n`;
@@ -72,7 +90,7 @@ async function generateSitemap() {
   postSitemap += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
   blogPosts.forEach(post => {
     postSitemap += `  <url>\n`;
-    postSitemap += `    <loc>${BASE_URL}/blog/${post.slug}</loc>\n`;
+    postSitemap += `    <loc>${BASE_URL}/blog/${post.slug}/</loc>\n`;
     postSitemap += `    <lastmod>${post.updatedAt}</lastmod>\n`;
     postSitemap += `    <changefreq>monthly</changefreq>\n`;
     postSitemap += `    <priority>0.7</priority>\n`;
@@ -111,7 +129,7 @@ async function generateSitemap() {
   console.log(`Generated sitemap.xml at: apps/web/public/sitemap.xml`);
   console.log(`Generated page-sitemap.xml at: apps/web/public/page-sitemap.xml`);
   console.log(`Generated post-sitemap.xml at: apps/web/public/post-sitemap.xml`);
-  console.log(`Total pages in page-sitemap.xml: ${staticRoutes.length}`);
+  console.log(`Total pages in page-sitemap.xml: ${pageRoutes.length}`);
   console.log(`Total blog posts in post-sitemap.xml: ${blogPosts.length}`);
 
   // Verification Logging
@@ -128,15 +146,18 @@ async function generateSitemap() {
   printLines(postSitemapPath, 'post-sitemap.xml');
 
   console.log(`Verification: sitemap.xml contains 2 URLs (sitemaps)`);
-  console.log(`Verification: page-sitemap.xml contains ${staticRoutes.length} pages`);
+  console.log(`Verification: page-sitemap.xml contains ${pageRoutes.length} pages`);
   console.log(`Verification: post-sitemap.xml contains ${blogPosts.length} blog posts`);
   
   if (blogPosts.length > 0) {
     console.log(`Sample blog URLs:`);
     blogPosts.slice(0, 3).forEach(post => {
-      console.log(`- ${BASE_URL}/blog/${post.slug}`);
+      console.log(`- ${BASE_URL}/blog/${post.slug}/`);
     });
   }
 }
 
-generateSitemap().catch(console.error);
+generateSitemap().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
