@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, FileText, Users, Link2, TrendingUp, Award, Clock, Star } from 'lucide-react';
+import { ArrowRight, FileText, Users, Link2, TrendingUp, Award, Star, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -15,6 +15,9 @@ const HomePage = () => {
       description: 'Access premium guest posting opportunities on high-authority websites across various niches.',
       link: '/buy-guest-posts',
       gradient: 'from-blue-500 to-cyan-500',
+      image: '/images/guest-post-content-placement.webp',
+      alt: 'Illustration of a quality-checked guest post article ready for publisher placement',
+      caption: 'Review relevant publishing opportunities before selecting a placement.',
     },
     {
       icon: Users,
@@ -22,6 +25,9 @@ const HomePage = () => {
       description: 'Connect with influential bloggers and secure quality backlinks through personalized outreach.',
       link: '/blogger-outreach',
       gradient: 'from-purple-500 to-pink-500',
+      image: '/images/backlink-outreach-strategy.webp',
+      alt: 'SEO professionals planning a backlink and blogger outreach campaign',
+      caption: 'Manual outreach connects campaigns with relevant editorial websites.',
     },
     {
       icon: Link2,
@@ -29,6 +35,9 @@ const HomePage = () => {
       description: 'Get your links inserted into existing high-quality content on authoritative websites.',
       link: '/link-insertion',
       gradient: 'from-orange-500 to-red-500',
+      image: '/images/contextual-link-insertion.webp',
+      alt: 'Illustration of contextual backlinks connecting relevant web pages across devices',
+      caption: 'Contextual link insertion adds a useful citation to existing content.',
     },
   ];
 
@@ -66,6 +75,35 @@ const HomePage = () => {
     },
   ];
 
+  const faqs = [
+    {
+      question: 'How do I choose the right guest post website?',
+      answer: 'Start with topical relevance and editorial quality, then review authority metrics, organic traffic patterns, audience fit and outbound-link behaviour. A high metric alone does not guarantee a useful placement.',
+    },
+    {
+      question: 'Can I approve a publisher before my article is written?',
+      answer: 'Yes. You can review suitable publisher opportunities before content production so the topic, target page and placement match your campaign requirements.',
+    },
+    {
+      question: 'What is included with a guest post placement?',
+      answer: 'The workflow can include publisher research, opportunity approval, original content, editorial coordination, publication and live-link reporting. Exact inclusions depend on the selected service.',
+    },
+    {
+      question: 'What is the difference between a guest post and link insertion?',
+      answer: 'A guest post publishes a new article, while a link insertion adds a relevant citation to a suitable existing article. The best option depends on context, editorial fit and campaign goals.',
+    },
+  ];
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(({ question, answer }) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -82,8 +120,18 @@ const HomePage = () => {
   return (
     <>
       <Helmet>
-        <title>HighDaGuestPosts - Premium Guest Posting & Link Building Services</title>
-        <meta name="description" content="Boost your SEO with high-quality guest posts on authoritative websites. Professional blogger outreach and link insertion services with proven results." />
+        <title>Guest Post Marketplace & Link Building | HighDaGuestPosts</title>
+        <meta name="description" content="Browse guest post opportunities and get professional blogger outreach, original content and contextual link insertion with transparent placement reporting." />
+        <meta name="robots" content="index,follow,max-image-preview:large" />
+        <link rel="canonical" href="https://highdaguestposts.com/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Guest Post Marketplace & Link Building | HighDaGuestPosts" />
+        <meta property="og:description" content="Find relevant guest post placements, blogger outreach and contextual link insertion services for your SEO campaign." />
+        <meta property="og:url" content="https://highdaguestposts.com/" />
+        <meta property="og:image" content="https://highdaguestposts.com/images/guest-post-seo-growth.webp" />
+        <meta property="og:image:alt" content="SEO growth illustration for guest post and link building campaigns" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>
 
       <Header />
@@ -177,7 +225,12 @@ const HomePage = () => {
             {services.map((service, index) => (
               <motion.div key={index} variants={itemVariants}>
                 <Link to={service.link} className="block group">
-                  <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 h-full border border-slate-200 hover:border-blue-300">
+                  <article className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 h-full border border-slate-200 hover:border-blue-300">
+                    <figure>
+                      <img src={service.image} alt={service.alt} width="1800" height="1200" loading="lazy" decoding="async" className="w-full aspect-[3/2] object-cover" />
+                      <figcaption className="px-8 pt-4 text-sm text-slate-500">{service.caption}</figcaption>
+                    </figure>
+                    <div className="p-8 pt-5">
                     <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                       <service.icon className="w-8 h-8 text-white" />
                     </div>
@@ -187,11 +240,57 @@ const HomePage = () => {
                       Learn More
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </div>
-                  </div>
+                    </div>
+                  </article>
                 </Link>
               </motion.div>
             ))}
           </motion.div>
+        </div>
+      </section>
+
+      {/* Marketplace Guidance Section */}
+      <section className="py-24 bg-white" aria-labelledby="guest-post-marketplace-heading">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-14 items-center">
+          <figure className="rounded-2xl overflow-hidden border border-slate-200 shadow-xl bg-slate-50">
+            <img
+              src="/images/guest-post-seo-growth.webp"
+              alt="SEO analytics and rocket illustration representing sustainable growth through guest posting"
+              width="1800"
+              height="900"
+              loading="lazy"
+              decoding="async"
+              className="w-full aspect-[4/3] object-cover"
+            />
+            <figcaption className="px-6 py-4 text-sm text-slate-600">
+              Relevant editorial placements support authority, referral discovery and long-term organic visibility.
+            </figcaption>
+          </figure>
+
+          <div>
+            <p className="text-sm font-bold uppercase tracking-widest text-blue-600 mb-3">Built for informed placement decisions</p>
+            <h2 id="guest-post-marketplace-heading" className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+              More Than a List of High-DA Websites
+            </h2>
+            <p className="text-lg text-slate-600 leading-relaxed mb-5">
+              A professional <Link to="/buy-guest-posts" className="font-semibold text-blue-700 hover:underline">guest post marketplace</Link> should help you evaluate context—not simply sort sites by one number. The strongest opportunities align the publisher&apos;s subject, audience and editorial standards with the page you want to promote.
+            </p>
+            <p className="text-lg text-slate-600 leading-relaxed mb-8">
+              Our workflow combines publisher research, site approval, original content and publication reporting. You keep visibility over the placement while our team coordinates the time-consuming outreach and editorial steps.
+            </p>
+            <ul className="grid sm:grid-cols-2 gap-4 mb-8">
+              {['Topical and audience relevance', 'Traffic and authority signals', 'Editorial content quality', 'Clear placement reporting'].map((item) => (
+                <li key={item} className="flex items-start gap-3 text-slate-700">
+                  <CheckCircle2 className="w-5 h-5 mt-0.5 shrink-0 text-emerald-600" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="flex flex-wrap gap-5">
+              <Link to="/buy-guest-posts" className="inline-flex items-center font-semibold text-blue-700 hover:text-blue-900">Explore guest post opportunities<ArrowRight className="ml-2 w-5 h-5" /></Link>
+              <Link to="/pricing" className="inline-flex items-center font-semibold text-slate-700 hover:text-slate-950">Review pricing options<ArrowRight className="ml-2 w-5 h-5" /></Link>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -244,6 +343,25 @@ const HomePage = () => {
               </motion.div>
             ))}
           </motion.div>
+        </div>
+      </section>
+
+      {/* Frequently Asked Questions */}
+      <section className="py-24 bg-slate-50" aria-labelledby="home-faq-heading">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <p className="text-sm font-bold uppercase tracking-widest text-blue-600 mb-3">Guest post marketplace FAQ</p>
+            <h2 id="home-faq-heading" className="text-4xl md:text-5xl font-bold text-slate-900 mb-5">Questions Before You Choose a Placement</h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">Straightforward answers to help you compare guest posts, blogger outreach and contextual link insertion.</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            {faqs.map(({ question, answer }) => (
+              <article key={question} className="rounded-2xl border border-slate-200 bg-white p-7 shadow-sm">
+                <h3 className="text-xl font-bold text-slate-900 mb-3">{question}</h3>
+                <p className="text-slate-600 leading-relaxed">{answer}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
